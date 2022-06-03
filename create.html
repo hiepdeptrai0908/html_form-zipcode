@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>IT 日本語</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>新規登録</h1>
+            <div class="content-item">
+                <label for="" class="content-item-text">郵便番号</label>
+                <div class="search-box">
+                    <input type="text" placeholder="郵便番号" class="content-item-input content-item-input-search"
+                        maxlength="7">
+                    <button class="btn-search">検索</button>
+                </div>
+            </div>
+            <form action="">
+                <div class="content-item">
+                    <label for="" class="content-item-text">住所 1</label>
+                    <input type="text" placeholder="県、市、区" class="content-item-input address12Api">
+                </div>
+
+                <div class="content-item">
+                    <label for="" class="content-item-text">住所 2</label>
+                    <input type="text" placeholder="マンション名、部屋番号" class="content-item-input address3Api">
+                </div>
+
+                <div class="content-item">
+                    <label for="email" class="content-item-text">Email</label>
+                    <input id="email" type="text" placeholder="Enter your Email" class="content-item-input">
+                </div>
+
+                <div class="content-item">
+                    <label for="password" class="content-item-text">Password</label>
+                    <input id="password" type="text" placeholder="Enter your Password" class="content-item-input">
+                </div>
+
+                <div class="content-item">
+                    <button type="button" class="create-btn">登録</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+
+        const searchBtn = document.querySelector('.btn-search')
+        const zipcodeText = document.querySelector('.content-item-text')
+        const zipcodeInput = document.querySelector('.content-item-input-search')
+        const address12ApiElement = document.querySelector('.address12Api')
+        const address3ApiElement = document.querySelector('.address3Api')
+
+        zipcodeInput.onkeydown = function () {
+            zipcodeText.textContent = '郵便番号'
+        }
+
+        searchBtn.onclick = () => {
+            var zipcodeUrl = 'https://zipcloud.ibsnet.co.jp/api/search?zipcode='
+
+            fetch(zipcodeUrl + zipcodeInput.value)
+                .then(response => response.json())
+                .then(datas => datas.results)
+                .then(results => {
+                    console.log(results);
+                    const htmls = results.map(result => {
+                        address12ApiElement.value = `${result.address1}${result.address2}`
+                        address3ApiElement.value = `${result.address3}`
+                    })
+                })
+                .catch(function(){
+                    zipcodeText.innerHTML = `<span style="color: red;">郵便番号が正しくありません！</span>`
+                })
+        }
+    </script>
+</body>
+
+</html>
